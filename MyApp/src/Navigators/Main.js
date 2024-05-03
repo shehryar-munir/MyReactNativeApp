@@ -1,15 +1,16 @@
 import React from 'react'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import { IndexExampleContainer } from '@/Containers'
+import { createStackNavigator } from '@react-navigation/stack'
+import Login from '@/Containers/Login'
+import ActionSheetComponent from '@/Components/ActionSheetComponent'
 
-const Tab = createBottomTabNavigator()
+const Stack = createStackNavigator()
 
 // @refresh reset
 const MainNavigator = () => {
   return (
-    <Tab.Navigator>
-      <Tab.Screen name="Home" component={IndexExampleContainer} />
-    </Tab.Navigator>
+    <Stack.Navigator>
+      <Stack.Screen name="Login" component={Login} />
+    </Stack.Navigator>
   )
 }
 
