@@ -1,7 +1,7 @@
 import React from 'react'
 import { createStackNavigator } from '@react-navigation/stack'
-import Login from '@/Containers/Login'
-import ActionSheetComponent from '@/Components/ActionSheetComponent'
+import Signup from '@/Containers/Signup'
+import Home from '@/Containers/Home'
 
 const Stack = createStackNavigator()
 
@@ -9,7 +9,8 @@ const Stack = createStackNavigator()
 const MainNavigator = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Login" component={Login} />
+      <Stack.Screen name="Login" component={Signup} />
+      <Stack.Screen name={'Home'} component={Home} />
     </Stack.Navigator>
   )
 }

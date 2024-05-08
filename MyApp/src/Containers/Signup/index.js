@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import { View, Text, StyleSheet, Button } from 'react-native'
+import { View, Text, StyleSheet, Button, Alert } from 'react-native'
 import InputField from '@/Components/InputField'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
@@ -17,6 +17,7 @@ const styles = StyleSheet.create({
 
 const KEY_USERNAME = 'username'
 const KEY_PASSWORD = 'password'
+const KEY_TERMSANDCONDITIONAGREEMENT = 'termsAndConditionAgreement'
 
 const initialValues = {
   [KEY_USERNAME]: {
@@ -35,6 +36,11 @@ const initialValues = {
     placeholder: 'Enter password....',
     keyboardType: 'default',
     secureTextEntry: true,
+  },
+
+  [KEY_TERMSANDCONDITIONAGREEMENT]: {
+    key: KEY_TERMSANDCONDITIONAGREEMENT,
+    value: false,
   },
 }
 
@@ -56,11 +62,22 @@ const loginValidationSchema = Yup.object().shape({
   }),
 })
 
-const Login = () => {
+const Signup = ({ navigation }) => {
   const formikRef = useRef()
   const handleSubmit = values => {
     console.log('Value: ', formikRef?.current?.values)
     console.log('Errors: ', formikRef?.current?.errors)
+
+    if (
+      formikRef.current?.values[KEY_TERMSANDCONDITIONAGREEMENT].value === true
+    ) {
+      navigation.navigate('Home')
+    } else {
+      Alert.alert(
+        'Accept Terms & Conditions',
+        'You cannot signup without accepting terms and conditions.',
+      )
+    }
   }
 
   const handleChange = (key, value) => {
@@ -114,9 +131,12 @@ const Login = () => {
               />
             ) : null}
 
-            <ActionSheetComponent />
+            <ActionSheetComponent
+              fieldKey={values[KEY_TERMSANDCONDITIONAGREEMENT].key}
+              handleChangeFunction={handleChange}
+            />
 
-            <Button title={'login'} onPress={handleSubmit} />
+            <Button title={'Signup'} onPress={handleSubmit} />
           </>
         )}
       </Formik>
@@ -124,4 +144,4 @@ const Login = () => {
   )
 }
 
-export default Login
+export default Signup
