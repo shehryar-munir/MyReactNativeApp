@@ -17,7 +17,14 @@ const styles = StyleSheet.create({
 
 const KEY_USERNAME = 'username'
 const KEY_PASSWORD = 'password'
-const KEY_TERMSANDCONDITIONAGREEMENT = 'termsAndConditionAgreement'
+const KEY_CAREER_PREFERENCE = 'careerPreference'
+const data = [
+  { id: '1', value: 'Software Development', isSelected: false },
+  { id: '2', value: 'Data Science', isSelected: false },
+  { id: '3', value: 'Software Quality Assurance', isSelected: false },
+  { id: '4', value: 'Machine Learning', isSelected: false },
+  { id: '5', value: 'Business Analytics', isSelected: false },
+]
 
 const initialValues = {
   [KEY_USERNAME]: {
@@ -38,9 +45,10 @@ const initialValues = {
     secureTextEntry: true,
   },
 
-  [KEY_TERMSANDCONDITIONAGREEMENT]: {
-    key: KEY_TERMSANDCONDITIONAGREEMENT,
-    value: false,
+  [KEY_CAREER_PREFERENCE]: {
+    key: KEY_CAREER_PREFERENCE,
+    options:data?.length?data:[],
+    value: [],
   },
 }
 
@@ -67,21 +75,11 @@ const Signup = ({ navigation }) => {
   const handleSubmit = values => {
     console.log('Value: ', formikRef?.current?.values)
     console.log('Errors: ', formikRef?.current?.errors)
-
-    if (
-      formikRef.current?.values[KEY_TERMSANDCONDITIONAGREEMENT].value === true
-    ) {
-      navigation.navigate('Home')
-    } else {
-      Alert.alert(
-        'Accept Terms & Conditions',
-        'You cannot signup without accepting terms and conditions.',
-      )
-    }
+    navigation.navigate('Home', { data: formikRef.current?.values })
   }
 
   const handleChange = (key, value) => {
-    console.log('Key sent: ', key, ' Value sent: ', value)
+    console.log("value", value)
     formikRef?.current?.setFieldValue(key, {
       ...formikRef?.current?.values[key],
       value: value,
@@ -132,7 +130,8 @@ const Signup = ({ navigation }) => {
             ) : null}
 
             <ActionSheetComponent
-              fieldKey={values[KEY_TERMSANDCONDITIONAGREEMENT].key}
+              fieldKey={values[KEY_CAREER_PREFERENCE].key}
+              options={values[KEY_CAREER_PREFERENCE]?.options}
               handleChangeFunction={handleChange}
             />
 

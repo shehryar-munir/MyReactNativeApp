@@ -1,12 +1,34 @@
-import React from 'react'
-import { View, Text } from 'react-native'
+import React, { useState } from 'react'
+import { View, Text, StyleSheet } from 'react-native'
 
-const Home = () => {
+const Home = ({ navigation, route }) => {
+  const [username, setUserName] = useState(route.params?.data?.username?.value)
+  const [password, setPassword] = useState(route.params?.data?.password?.value)
+  const [careers, setCareers] = useState(
+    route.params?.data.careerPreference.value,
+  )
   return (
     <View>
-      <Text>This is Home</Text>
+      <Text style={styles.homeTextStyle}>This is Home</Text>
+      <Text style={styles.textStyle}> Name: {username}</Text>
+      <Text style={styles.textStyle}> Password: {password}</Text>
+      <Text style={styles.textStyle}>Preferred Careers</Text>
+      {careers.map(career => {
+        return <Text style={styles.textStyle}> {career.value}</Text>
+      })}
     </View>
   )
 }
+
+const styles = StyleSheet.create({
+  textStyle: {
+    margin: 10,
+  },
+  homeTextStyle: {
+    fontSize: 30,
+    justifyContent: 'center',
+    margin: 10,
+  },
+})
 
 export default Home
