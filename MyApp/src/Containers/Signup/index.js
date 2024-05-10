@@ -1,19 +1,10 @@
-import React, { useRef } from 'react'
+import React, { useEffect, useRef } from 'react'
 import { View, Text, StyleSheet, Button, Alert } from 'react-native'
 import InputField from '@/Components/InputField'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import ErrorMessage from '@/Components/ErrorMessage'
 import ActionSheetComponent from '@/Components/ActionSheetComponent'
-
-const styles = StyleSheet.create({
-  center: {
-    flex: 1,
-    justifyContent: 'center',
-    alignContent: 'center',
-    alignItems: 'center',
-  },
-})
 
 const KEY_USERNAME = 'username'
 const KEY_PASSWORD = 'password'
@@ -47,7 +38,7 @@ const initialValues = {
 
   [KEY_CAREER_PREFERENCE]: {
     key: KEY_CAREER_PREFERENCE,
-    options:data?.length?data:[],
+    options: data?.length ? data : [],
     value: [],
   },
 }
@@ -58,6 +49,7 @@ const loginValidationSchema = Yup.object().shape({
       .required('Username is required')
       .min(2, 'Username must be at least 6 characters'),
   }),
+
   [KEY_PASSWORD]: Yup.object().shape({
     value: Yup.string()
       .required('Password is required')
@@ -68,18 +60,30 @@ const loginValidationSchema = Yup.object().shape({
         'Password must contain at least one capital letter, one number, and one special character',
       ),
   }),
+
+  [KEY_CAREER_PREFERENCE]: Yup.object().shape({
+    value: Yup.array().min(1, 'At least one career must be selected'),
+  }),
 })
 
 const Signup = ({ navigation }) => {
   const formikRef = useRef()
-  const handleSubmit = values => {
-    console.log('Value: ', formikRef?.current?.values)
-    console.log('Errors: ', formikRef?.current?.errors)
-    navigation.navigate('Home', { data: formikRef.current?.values })
+  const onSubmit = () => {
+    formikRef?.current?.handleSubmit()
+  }
+  const handleSubmit = () => {
+    // console.log('Value: ', formikRef?.current?.values)
+    // console.log('Errors: ', formikRef?.current?.errors)
+    // console.log('Formik Object: ', formikRef?.current)
+
+    if (Object.entries(formikRef?.current?.errors).length > 0) {
+      alert('Completed Requirements')
+    } else {
+      navigation.navigate('Home', { data: formikRef.current?.values })
+    }
   }
 
   const handleChange = (key, value) => {
-    console.log("value", value)
     formikRef?.current?.setFieldValue(key, {
       ...formikRef?.current?.values[key],
       value: value,
@@ -134,8 +138,26 @@ const Signup = ({ navigation }) => {
               options={values[KEY_CAREER_PREFERENCE]?.options}
               handleChangeFunction={handleChange}
             />
+            {formikRef.current?.errors[KEY_CAREER_PREFERENCE] ? (
+              <ErrorMessage
+                errorMessage={
+                  formikRef?.current?.errors[KEY_CAREER_PREFERENCE].value
+                }
+              />
+            ) : null}
 
-            <Button title={'Signup'} onPress={handleSubmit} />
+            {values[KEY_CAREER_PREFERENCE] &&
+            values[KEY_CAREER_PREFERENCE].value &&
+            values[KEY_CAREER_PREFERENCE].value.length > 0 ? (
+              <View>
+                <Text>Selected Careers</Text>
+                {values[KEY_CAREER_PREFERENCE].value.map((item, index) => {
+                  return <Text key={index}>{item}</Text>
+                })}
+              </View>
+            ) : null}
+
+            <Button title={'Signup'} onPress={onSubmit} />
           </>
         )}
       </Formik>
@@ -144,3 +166,12 @@ const Signup = ({ navigation }) => {
 }
 
 export default Signup
+
+const styles = StyleSheet.create({
+  center: {
+    flex: 1,
+    justifyContent: 'center',
+    alignContent: 'center',
+    alignItems: 'center',
+  },
+})

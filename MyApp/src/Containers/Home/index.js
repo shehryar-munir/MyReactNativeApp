@@ -5,8 +5,10 @@ const Home = ({ navigation, route }) => {
   const [username, setUserName] = useState(route.params?.data?.username?.value)
   const [password, setPassword] = useState(route.params?.data?.password?.value)
   const [careers, setCareers] = useState(
-    route.params?.data.careerPreference.value,
+    route.params?.data.careerPreference?.value
   )
+
+    console.log("Career rceivec: ", careers )
   return (
     <View>
       <Text style={styles.homeTextStyle}>This is Home</Text>
@@ -14,7 +16,7 @@ const Home = ({ navigation, route }) => {
       <Text style={styles.textStyle}> Password: {password}</Text>
       <Text style={styles.textStyle}>Preferred Careers</Text>
       {careers.map(career => {
-        return <Text style={styles.textStyle}> {career.value}</Text>
+        return <Text key={career} style={styles.textStyle}> {career}</Text>
       })}
     </View>
   )

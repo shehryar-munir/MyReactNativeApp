@@ -24,13 +24,6 @@ const styles = StyleSheet.create({
   },
 })
 
-// const data = [
-//   { key: '1', value: 'Software Development', isSelected: false },
-//   { key: '2', value: 'Data Science', isSelected: false },
-//   { key: '3', value: 'Software Quality Assurance', isSelected: false },
-//   { key: '4', value: 'Machine Learning', isSelected: false },
-//   { key: '5', value: 'Business Analytics', isSelected: false },
-// ]
 
 const ActionSheetComponent = ({ fieldKey, handleChangeFunction, options }) => {
   const actionSheetRef = useRef(null)
@@ -40,19 +33,25 @@ const ActionSheetComponent = ({ fieldKey, handleChangeFunction, options }) => {
     actionSheetRef.current?.setModalVisible(true)
   }
 
+
   const updateSelectedData = (item) => {
-    console.log("key ", item)
-    // console.log("selectedValue", selectedValue)
-    // data.map(item => {
-    //   if (item.key === key) {
-    //     item.isSelected = selectedValue
-    //   }
-    // })
+
+    if (selectedCareers.includes(item.value)) {
+      const careersCopy = [...selectedCareers]
+      const filteredCareers = careersCopy.filter(career => career !== item.value)
+      setSelectedCareers(filteredCareers)
+    }
+    else {
+      setSelectedCareers([
+        ...selectedCareers,
+        item.value
+      ])
+    }
   }
-  console.log("options data ", options)
 
   const closeModal = () => {
-    handleChangeFunction(fieldKey, options)
+
+    handleChangeFunction(fieldKey, selectedCareers)
     actionSheetRef.current?.setModalVisible(false)
   }
 
@@ -66,27 +65,17 @@ const ActionSheetComponent = ({ fieldKey, handleChangeFunction, options }) => {
                    bounceOnOpen={false}
                    nestedScrollEnabled={true}>
         <View>
-          {/*{options?.map(item => (*/}
-          {/*  <CommunityCheckBox*/}
-          {/*    updateSelectedData={updateSelectedData}*/}
-          {/*    optionKey={item.key}*/}
-          {/*    optionText={item.value}*/}
-          {/*  />*/}
-          {/*))}*/}
+
           {options?.map(item => (
-              // <CommunityCheckBox
-              //     updateSelectedData={updateSelectedData}
-              //     optionKey={item.key}
-              //     optionText={item.value}
-              // />
+
               <View key={item?.id}>
-              <TouchableWithoutFeedback onPress={()=>updateSelectedData(item)}>
-                <View>
-              <Text>
-                {item?.value}
-              </Text>
-                </View>
-              </TouchableWithoutFeedback>
+                <TouchableWithoutFeedback onPress={()=>updateSelectedData(item)}>
+                  <View>
+                    <Text>
+                      {item?.value}
+                    </Text>
+                  </View>
+                </TouchableWithoutFeedback>
               </View>
           ))}
 
