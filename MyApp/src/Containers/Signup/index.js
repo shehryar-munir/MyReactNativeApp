@@ -1,14 +1,16 @@
-import React, { useEffect, useRef } from 'react'
-import { View, Text, StyleSheet, Button, Alert } from 'react-native'
+import React, { useContext, useRef, useState } from 'react'
+import { View, Text, StyleSheet, Button, TextInput } from 'react-native'
 import InputField from '@/Components/InputField'
 import { Formik } from 'formik'
 import * as Yup from 'yup'
 import ErrorMessage from '@/Components/ErrorMessage'
 import ActionSheetComponent from '@/Components/ActionSheetComponent'
+import { AppNameContext } from '@/Navigators/Main'
 
 const KEY_USERNAME = 'username'
 const KEY_PASSWORD = 'password'
 const KEY_CAREER_PREFERENCE = 'careerPreference'
+
 const data = [
   { id: '1', value: 'Software Development', isSelected: false },
   { id: '2', value: 'Data Science', isSelected: false },
@@ -67,10 +69,16 @@ const loginValidationSchema = Yup.object().shape({
 })
 
 const Signup = ({ navigation }) => {
+  const appNameContext = useContext(AppNameContext)
+
+  const [appName, setAppName] = useState('')
+
   const formikRef = useRef()
+
   const onSubmit = () => {
     formikRef?.current?.handleSubmit()
   }
+
   const handleSubmit = () => {
     // console.log('Value: ', formikRef?.current?.values)
     // console.log('Errors: ', formikRef?.current?.errors)
@@ -90,8 +98,21 @@ const Signup = ({ navigation }) => {
     })
   }
 
+  const handleAppNameChange = () => {
+    appNameContext.setAppName(appName)
+  }
+
   return (
     <View style={styles.center}>
+      <Text>{appNameContext.appName}</Text>
+      <TextInput
+        value={appName}
+        onChangeText={val => setAppName(val)}
+        style={{ borderWidth: 1, width: 100 }}
+      />
+
+      <Button title={'Change app name'} onPress={handleAppNameChange} />
+
       <Text>Login Screen</Text>
       <Formik
         initialValues={initialValues}
